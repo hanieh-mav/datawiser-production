@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Analytics Testing App</title>
+
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --surface-color: #1e293b;
+      --surface-soft: #273449;
+      --primary-color: #38bdf8;
+      --primary-dark: #0284c7;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --purple-color: #a855f7;
+      --pink-color: #ec4899;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.12), transparent 35%),
+        var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    #ad-banner {
+      display: block;
+      background: linear-gradient(90deg, #f59e0b, #ef4444, #ec4899);
+      color: white;
+      text-align: center;
+      padding: 14px;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    nav {
+      background-color: rgba(30, 41, 59, 0.92);
+      backdrop-filter: blur(12px);
+      padding: 1rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      font-weight: 900;
+      color: var(--primary-color);
+      margin-right: auto;
+      letter-spacing: 0.03em;
+    }
+
+    nav a {
+      color: var(--text-main);
+      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
+      transition: color 0.2s, transform 0.2s;
+      padding: 0.35rem 0.5rem;
+      border-radius: 8px;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--primary-color);
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .page-section {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero {
+      padding: 4rem 2rem;
+      border-radius: 22px;
+      background:
+        linear-gradient(135deg, rgba(56, 189, 248, 0.16), rgba(168, 85, 247, 0.14)),
+        var(--surface-color);
+      border: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      line-height: 1.05;
+      margin-bottom: 1rem;
+      color: var(--text-main);
+    }
+
+    .hero p {
+      max-width: 720px;
+      font-size: 1.1rem;
+    }
+
+    .card {
+      background: rgba(30, 41, 59, 0.92);
+      padding: 1.75rem;
+      border-radius: 18px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+      border: 1px solid var(--border-color);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--primary-color);
+      margin-bottom: 0.8rem;
+    }
+
+    p {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .muted {
+      color: var(--text-muted);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--primary-color);
+      font-weight: 800;
+      font-size: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      background-color: var(--primary-color);
+      color: #0f172a;
+      border: none;
+      padding: 0.8rem 1.25rem;
+      border-radius: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.12s, opacity 0.2s, box-shadow 0.2s;
+      box-shadow: 0 10px 20px rgba(56, 189, 248, 0.18);
+    }
+
+    .btn:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-secondary {
+      background-color: #475569;
+      color: white;
+      box-shadow: none;
+    }
+
+    .btn-success {
+      background-color: var(--success-color);
+      color: #052e24;
+      box-shadow: 0 10px 20px rgba(16, 185, 129, 0.18);
+    }
+
+    .btn-warning {
+      background-color: var(--warning-color);
+      color: #422006;
+      box-shadow: 0 10px 20px rgba(245, 158, 11, 0.18);
+    }
+
+    .btn-danger {
+      background-color: var(--danger-color);
+      color: white;
+      box-shadow: 0 10px 20px rgba(239, 68, 68, 0.18);
+    }
+
+    .btn-purple {
+      background-color: var(--purple-color);
+      color: white;
+      box-shadow: 0 10px 20px rgba(168, 85, 247, 0.18);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
+      box-shadow: none;
+    }
+
+    .product-card {
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .price {
+      color: white;
+      font-size: 2rem;
+      font-weight: 900;
+      margin: 0.5rem 0;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.85rem;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background: rgba(15, 23, 42, 0.9);
+      color: white;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+    }
+
+    .spacer {
+      height: 110vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      border: 1px dashed var(--border-color);
+      border-radius: 18px;
+      margin-bottom: 1.5rem;
+    }
+
+    #products-view-target,
+    #about-view-target,
+    #pricing-view-target {
+      border-left: 5px solid var(--success-color);
+    }
+
+    .event-log {
+      background: #020617;
+      color: #cbd5e1;
+      padding: 1rem;
+      border-radius: 14px;
+      border: 1px solid #1e293b;
+      font-size: 0.9rem;
+      max-height: 260px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    footer {
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      margin-top: 3rem;
+    }
+
+    @media (max-width: 800px) {
+      .grid,
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        align-items: flex-start;
+      }
+
+      .brand {
+        width: 100%;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="ad-banner" data-analytics-element="top_promo_banner">
+    Special Offer: 50% Off Data Analytics Tools
+  </div>
+
+  <nav>
+    <div class="brand">Datawise Test Lab</div>
+
+    <a href="/" class="nav-link" data-route="/">Home</a>
+    <a href="/products" class="nav-link" data-route="/products">Products</a>
+    <a href="/about" class="nav-link" data-route="/about">About</a>
+    <a href="/pricing" class="nav-link" data-route="/pricing">Pricing</a>
+    <a href="/contact" class="nav-link" data-route="/contact">Contact</a>
+    <a href="/login" class="nav-link" data-route="/login">Login</a>
+  </nav>
+
+  <main class="container">
+    <section id="route-home" class="page-section">
+      <div class="hero" data-analytics-element="home_hero">
+        <span class="tag">Home Route</span>
+        <h1>Analytics Testing App</h1>
+        <p>
+          Use this site to test page views, route changes, clicks, forms, scroll visibility,
+          styled buttons, banners, and UI interactions.
+        </p>
+
+        <div class="btn-row">
+          <button class="btn track-click" data-event-name="home_hero_get_started_clicked">
+            Get Started
+          </button>
+          <button class="btn btn-secondary track-click" data-event-name="home_hero_learn_more_clicked">
+            Learn More
+          </button>
+          <button class="btn btn-outline track-click" data-event-name="home_hero_outline_clicked">
+            Outline CTA
+          </button>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card" data-analytics-element="home_feature_fast">
+          <h2>Fast Events</h2>
+          <p>Click different styled buttons and compare event payloads.</p>
+          <button class="btn btn-success track-click" data-event-name="home_fast_events_clicked">
+            Test Fast Event
+          </button>
+        </div>
+
+        <div class="card" data-analytics-element="home_feature_routes">
+          <h2>Route Changes</h2>
+          <p>Navigate between clean URLs without a framework.</p>
+          <button class="btn btn-purple track-click" data-event-name="home_route_test_clicked">
+            Test Route Button
+          </button>
+        </div>
+
+        <div class="card" data-analytics-element="home_feature_forms">
+          <h2>Forms</h2>
+          <p>Submit forms on Login and Contact pages.</p>
+          <button class="btn btn-warning track-click" data-event-name="home_form_test_clicked">
+            Test Form CTA
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="route-products" class="page-section">
+      <div class="card">
+        <span class="tag">Products Route</span>
+        <h1>Products</h1>
+        <p>
+          Product cards with different buttons, styles, prices, and analytics event names.
+        </p>
+      </div>
+
+      <div class="grid">
+        <div class="card product-card" data-analytics-element="product_card_starter">
+          <div>
+            <h2>Starter Analytics</h2>
+            <p>Good for simple tracking tests.</p>
+            <div class="price">$19</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn track-click" data-event-name="product_starter_view_clicked">
+              View Starter
+            </button>
+            <button class="btn btn-success track-click" data-event-name="product_starter_buy_clicked">
+              Buy Starter
+            </button>
+          </div>
+        </div>
+
+        <div class="card product-card" data-analytics-element="product_card_growth">
+          <div>
+            <h2>Growth Analytics</h2>
+            <p>Good for campaign, funnel, and conversion testing.</p>
+            <div class="price">$49</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-purple track-click" data-event-name="product_growth_view_clicked">
+              View Growth
+            </button>
+            <button class="btn btn-warning track-click" data-event-name="product_growth_trial_clicked">
+              Start Trial
+            </button>
+          </div>
+        </div>
+
+        <div class="card product-card" data-analytics-element="product_card_enterprise">
+          <div>
+            <h2>Enterprise Analytics</h2>
+            <p>Good for heavy testing and edge cases.</p>
+            <div class="price">$199</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-danger track-click" data-event-name="product_enterprise_demo_clicked">
+              Book Demo
+            </button>
+            <button class="btn btn-outline track-click" data-event-name="product_enterprise_docs_clicked">
+              Read Docs
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="spacer">
+        Scroll down to trigger product visibility tracking
+      </div>
+
+      <div id="products-view-target" class="card" data-analytics-element="products_scroll_target">
+        <h2>Products Scroll Target Visible</h2>
+        <p>This section is useful for testing element visibility analytics.</p>
+        <button class="btn btn-success track-click" data-event-name="products_scroll_target_cta_clicked">
+          Click Visible Product CTA
+        </button>
+      </div>
+    </section>
+
+    <section id="route-about" class="page-section">
+      <div class="card">
+        <span class="tag">About Route</span>
+        <h1>About This Test Site</h1>
+        <p>
+          This page exists to test informational pages, content cards, button variants,
+          scroll events, and route-level analytics behavior.
+        </p>
+
+        <div class="btn-row">
+          <button class="btn track-click" data-event-name="about_primary_clicked">
+            Primary About CTA
+          </button>
+          <button class="btn btn-secondary track-click" data-event-name="about_secondary_clicked">
+            Secondary About CTA
+          </button>
+          <button class="btn btn-purple track-click" data-event-name="about_purple_clicked">
+            Purple About CTA
+          </button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" data-analytics-element="about_mission_card">
+          <h2>Mission</h2>
+          <p>Make analytics testing repeatable and simple.</p>
+          <button class="btn btn-outline track-click" data-event-name="about_mission_clicked">
+            Mission Click
+          </button>
+        </div>
+
+        <div class="card" data-analytics-element="about_team_card">
+          <h2>Team</h2>
+          <p>Fake content for route and element testing.</p>
+          <button class="btn btn-warning track-click" data-event-name="about_team_clicked">
+            Team Click
+          </button>
+        </div>
+      </div>
+
+      <div class="spacer">
+        Keep scrolling for the About visibility target
+      </div>
+
+      <div id="about-view-target" class="card" data-analytics-element="about_scroll_target">
+        <h2>About Scroll Target Visible</h2>
+        <p>Another visibility target with a unique analytics element name.</p>
+        <button class="btn btn-success track-click" data-event-name="about_scroll_target_clicked">
+          About Scroll CTA
+        </button>
+      </div>
+    </section>
+
+    <section id="route-pricing" class="page-section">
+      <div class="card">
+        <span class="tag">Pricing Route</span>
+        <h1>Pricing</h1>
+        <p>Use this route for pricing-card impressions, plan clicks, and conversion testing.</p>
+      </div>
+
+      <div class="grid">
+        <div class="card" data-analytics-element="pricing_free_plan">
+          <h2>Free</h2>
+          <div class="price">$0</div>
+          <p>For smoke testing.</p>
+          <button class="btn btn-secondary track-click" data-event-name="pricing_free_selected">
+            Select Free
+          </button>
+        </div>
+
+        <div class="card" data-analytics-element="pricing_pro_plan">
+          <h2>Pro</h2>
+          <div class="price">$29</div>
+          <p>For normal test flows.</p>
+          <button class="btn track-click" data-event-name="pricing_pro_selected">
+            Select Pro
+          </button>
+        </div>
+
+        <div class="card" data-analytics-element="pricing_business_plan">
+          <h2>Business</h2>
+          <div class="price">$99</div>
+          <p>For conversion-heavy flows.</p>
+          <button class="btn btn-success track-click" data-event-name="pricing_business_selected">
+            Select Business
+          </button>
+        </div>
+      </div>
+
+      <div class="spacer">
+        Scroll to pricing visibility target
+      </div>
+
+      <div id="pricing-view-target" class="card" data-analytics-element="pricing_scroll_target">
+        <h2>Pricing Scroll Target Visible</h2>
+        <p>This should be detected when it enters the viewport.</p>
+        <button class="btn btn-purple track-click" data-event-name="pricing_scroll_target_clicked">
+          Pricing Scroll CTA
+        </button>
+      </div>
+    </section>
+
+    <section id="route-contact" class="page-section">
+      <div class="card">
+        <span class="tag">Contact Route</span>
+        <h1>Contact</h1>
+        <p>Submit this fake form to test form submit analytics.</p>
+
+        <form id="contact-form" data-analytics-element="contact_form">
+          <input
+            type="text"
+            id="contact-name"
+            name="name"
+            placeholder="Full name"
+            required
+          />
+
+          <input
+            type="email"
+            id="contact-email"
+            name="email"
+            placeholder="Email address"
+            required
+          />
+
+          <select id="contact-topic" name="topic" required>
+            <option value="">Select topic</option>
+            <option value="demo">Book demo</option>
+            <option value="support">Support</option>
+            <option value="pricing">Pricing</option>
+            <option value="bug">Bug report</option>
+          </select>
+
+          <textarea
+            id="contact-message"
+            name="message"
+            placeholder="Message"
+            required
+          ></textarea>
+
+          <button
+            type="submit"
+            class="btn btn-success track-click"
+            data-event-name="contact_form_submit_clicked"
+          >
+            Send Message
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <section id="route-login" class="page-section">
+      <div class="card" style="max-width: 460px; margin: 0 auto;">
+        <span class="tag">Login Route</span>
+        <h1>Account Login</h1>
+        <p>Fake login form for submit-event testing.</p>
+
+        <form id="login-form" data-analytics-element="login_form">
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Username"
+            required
+          />
+
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+
+          <button
+            type="submit"
+            class="btn track-click"
+            style="width: 100%;"
+            data-event-name="login_form_submit_clicked"
+          >
+            Sign In
+          </button>
+        </form>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary track-click" data-event-name="login_forgot_password_clicked">
+            Forgot Password
+          </button>
+
+          <button class="btn btn-outline track-click" data-event-name="login_create_account_clicked">
+            Create Account
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="route-not-found" class="page-section">
+      <div class="card">
+        <span class="tag">404 Route</span>
+        <h1>Page Not Found</h1>
+        <p>The route does not exist.</p>
+        <button class="btn track-click" data-event-name="not_found_go_home_clicked" onclick="navigateTo('/')">
+          Go Home
+        </button>
+      </div>
+    </section>
+
+    <div class="card">
+      <h2>Local Test Event Log</h2>
+      <p>
+        This log is only for your browser debugging. Your analytics script still runs separately.
+      </p>
+      <div id="event-log" class="event-log">Waiting for events...</div>
+    </div>
+  </main>
+
+  <footer data-analytics-element="footer">
+    Datawise Analytics Testing App — datawise-dev-team.vercel.app
+  </footer>
+
+  <script>
+    const routes = {
+      "/": "route-home",
+      "/products": "route-products",
+      "/about": "route-about",
+      "/pricing": "route-pricing",
+      "/contact": "route-contact",
+      "/login": "route-login"
+    };
+
+    const eventLog = document.getElementById("event-log");
+
+    function logEvent(type, payload) {
+      const time = new Date().toISOString();
+      const line = `[${time}] ${type}: ${JSON.stringify(payload, null, 2)}`;
+
+      if (eventLog.textContent === "Waiting for events...") {
+        eventLog.textContent = line;
+      } else {
+        eventLog.textContent = line + "\n\n" + eventLog.textContent;
+      }
+
+      console.log(type, payload);
+    }
+
+    function normalizePath(pathname) {
+      if (!pathname || pathname === "") return "/";
+      if (pathname.length > 1 && pathname.endsWith("/")) {
+        return pathname.slice(0, -1);
+      }
+      return pathname;
+    }
+
+    function renderRoute() {
+      const path = normalizePath(window.location.pathname);
+      const sectionId = routes[path] || "route-not-found";
+
+      document.querySelectorAll(".page-section").forEach((section) => {
+        section.classList.remove("active");
+      });
+
+      document.getElementById(sectionId).classList.add("active");
+
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        const route = link.getAttribute("data-route");
+        link.classList.toggle("active", route === path);
+      });
+
+      document.title =
+        path === "/"
+          ? "Analytics Testing App"
+          : `Analytics Testing App — ${path.replace("/", "")}`;
+
+      window.scrollTo({ top: 0, behavior: "instant" });
+
+      logEvent("route_change", {
+        path: path,
+        title: document.title
+      });
+
+      document.dispatchEvent(
+        new CustomEvent("analytics_route_change", {
+          detail: {
+            path: path,
+            title: document.title
+          }
+        })
+      );
+    }
+
+    function navigateTo(path) {
+      const normalizedPath = normalizePath(path);
+
+      if (window.location.pathname !== normalizedPath) {
+        window.history.pushState({}, "", normalizedPath);
+        renderRoute();
+      }
+    }
+
+    document.querySelectorAll(".nav-link").forEach((link) => {
+      link.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        const route = this.getAttribute("data-route");
+
+        logEvent("nav_click", {
+          route: route,
+          text: this.textContent.trim()
+        });
+
+        navigateTo(route);
+      });
+    });
+
+    window.addEventListener("popstate", renderRoute);
+
+    document.querySelectorAll(".track-click").forEach((button) => {
+      button.addEventListener("click", function () {
+        const eventName = this.getAttribute("data-event-name") || "unknown_click";
+
+        logEvent("button_click", {
+          event_name: eventName,
+          text: this.textContent.trim(),
+          route: normalizePath(window.location.pathname)
+        });
+
+        document.dispatchEvent(
+          new CustomEvent("analytics_button_click", {
+            detail: {
+              event_name: eventName,
+              text: this.textContent.trim(),
+              route: normalizePath(window.location.pathname)
+            }
+          })
+        );
+      });
+    });
+
+    const loginForm = document.getElementById("login-form");
+
+    loginForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      logEvent("form_submit", {
+        form_name: "login_form",
+        route: normalizePath(window.location.pathname),
+        username_filled: Boolean(document.getElementById("username").value)
+      });
+
+      alert("Fake login submitted. Check console/event log.");
+    });
+
+    const contactForm = document.getElementById("contact-form");
+
+    contactForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      logEvent("form_submit", {
+        form_name: "contact_form",
+        route: normalizePath(window.location.pathname),
+        topic: document.getElementById("contact-topic").value
+      });
+
+      alert("Fake contact form submitted. Check console/event log.");
+    });
+
+    const observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            const elementName =
+              entry.target.getAttribute("data-analytics-element") ||
+              entry.target.id ||
+              "unknown_element";
+
+            logEvent("element_view", {
+              element: elementName,
+              route: normalizePath(window.location.pathname)
+            });
+
+            document.dispatchEvent(
+              new CustomEvent("analytics_element_view", {
+                detail: {
+                  element: elementName,
+                  route: normalizePath(window.location.pathname)
+                }
+              })
+            );
+
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.45
+      }
+    );
+
+    [
+      "products-view-target",
+      "about-view-target",
+      "pricing-view-target"
+    ].forEach(function (id) {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
+
+    renderRoute();
+  </script>
+</body>
+</html>
